@@ -1,28 +1,54 @@
-import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import React, { useEffect, useState } from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../services/firebaseConfig";
+
+// Screens
+import LoginScreen from "../screens/auth/LoginScreen";
+import RegisterScreen from "../screens/auth/RegisterScreen";
 import HomeScreen from "../screens/HomeScreen";
-import SplashScreen from "../screens/SplashScreen";
 import UserScreen from "../screens/UserScreen";
+import SettingsScreen from "../screens/settingsScreen";
+import SplashScreen from "../screens/SplashScreen";
+import GameScreen from "../screens/GameScreen";
 
-const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
 
-const TabNavigator = () => {
-    return (<Tab.Navigator initialRouteName="Home">
-        <Tab.Screen name="Home" component={HomeScreen} options={{}}/>
-        <Tab.Screen name="User" component={UserScreen} options={{}}/>
-    </Tab.Navigator>)
-}
+const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
-    return (
-        <Stack.Navigator initialRouteName="Splash">
-            <Stack.Screen name = "Splash" component={SplashScreen} options={{headerShown: false}}/>
-            <Stack.Screen name = "MainTabs" component={TabNavigator} options={{headerShown: false}}/>
-        </Stack.Navigator>
-    )
-}
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-export default AppNavigator
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (loading) {
+    return <SplashScreen />;
+  }
+
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      {user ? (
+        <>
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="User" component={UserScreen} />
+          <Stack.Screen name="Settings" component={SettingsScreen} />
+          <Stack.Screen name="Game" component={GameScreen} />
+        </>
+      ) : (
+        <>
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Register" component={RegisterScreen} />
+        </>
+      )}
+    </Stack.Navigator>
+  );
+};
+
+export default AppNavigator;

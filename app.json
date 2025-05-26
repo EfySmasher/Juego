@@ -3,6 +3,7 @@
     "name": "MiAPP",
     "slug": "MiAPP",
     "version": "1.0.0",
+    "main": "node_modules/expo/AppEntry.js",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -10,7 +11,7 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#ff0000"
     },
     "ios": {
       "supportsTablet": true
@@ -23,6 +24,15 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "EXPO_PUBLIC_API_KEY": "TU_API_KEY",
+      "EXPO_PUBLIC_AUTH_DOMAIN": "TU_AUTH_DOMAIN",
+      "EXPO_PUBLIC_PROJECT_ID": "TU_PROJECT_ID",
+      "EXPO_PUBLIC_STORAGE_BUCKET": "TU_STORAGE_BUCKET",
+      "EXPO_PUBLIC_MESSAGING_SENDER_ID": "TU_MESSAGING_SENDER_ID",
+      "EXPO_PUBLIC_APP_ID": "TU_APP_ID",
+      "EXPO_PUBLIC_MEASUREMENT_ID": "TU_MEASUREMENT_ID"
     }
   }
 }
