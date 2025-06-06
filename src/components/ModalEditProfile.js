@@ -1,3 +1,4 @@
+//src/components/ModalEditProfile.js
 import React from "react";
 import { Modal, View, Text, TouchableOpacity, TextInput, Image, StyleSheet } from "react-native";
 
@@ -24,7 +25,7 @@ const ModalEditProfile = ({
           {isImage ? (
             <>
               <Image
-                source={value ? { uri: value } : require("../assets/default-avatar.png")}
+                source={value ? { uri: value } : require("../../assets/avatar.png")}
                 style={styles.imagePreview}
               />
               <TouchableOpacity style={styles.button} onPress={onChangeText}>

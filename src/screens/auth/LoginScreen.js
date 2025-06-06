@@ -1,29 +1,29 @@
+// src/screens/auth/LoginScreen.js
 import React, { useState, useContext } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../services/firebaseConfig";
 import { useNavigation } from "@react-navigation/native";
 import { showMessage } from "react-native-flash-message";
-import { UserContext } from "../../UserContext"; // ✅ IMPORTA tu contexto
+import { UserContext } from "../../UserContext";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
-  const { setUser } = useContext(UserContext); // ✅ accede al setter
+  const { setUser } = useContext(UserContext);
 
   const handleLogin = async () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-
-      setUser(userCredential.user); // ✅ guarda el usuario en contexto
+      setUser(userCredential.user); // ✅ Guarda en contexto
 
       showMessage({
         message: "🥳 Bienvenido de nuevo!",
         type: "success",
       });
 
-      navigation.navigate("Home"); // opcional: redirige a Home
+      navigation.replace("Home"); // Opcional: evitar volver a Login
     } catch (error) {
       showMessage({
         message: "😥 Error al iniciar sesión",
@@ -36,14 +36,12 @@ const LoginScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Iniciar Sesión</Text>
-
       <TextInput
         placeholder="Correo electrónico"
         value={email}
         onChangeText={setEmail}
         style={styles.input}
       />
-
       <TextInput
         placeholder="Contraseña"
         value={password}
@@ -51,11 +49,9 @@ const LoginScreen = () => {
         style={styles.input}
         secureTextEntry
       />
-
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Ingresar</Text>
       </TouchableOpacity>
-
       <TouchableOpacity onPress={() => navigation.navigate("Register")}>
         <Text style={styles.link}>¿No tienes cuenta? Regístrate</Text>
       </TouchableOpacity>

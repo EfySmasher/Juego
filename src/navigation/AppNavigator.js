@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+// src/navigation/AppNavigator.js
+import React, { useContext, useEffect, useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../services/firebaseConfig";
+import { UserContext } from "../UserContext";
 
 // Screens
 import LoginScreen from "../screens/auth/LoginScreen";
@@ -11,24 +11,22 @@ import UserScreen from "../screens/UserScreen";
 import SettingsScreen from "../screens/settingsScreen";
 import SplashScreen from "../screens/SplashScreen";
 import GameScreen from "../screens/GameScreen";
-
+import AboutScreen from "../screens/AboutScreen";
 
 const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { user } = useContext(UserContext);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
+    const timeout = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000); // 2 segundos para el splash
+    return () => clearTimeout(timeout);
   }, []);
 
-  if (loading) {
+  if (isLoading) {
     return <SplashScreen />;
   }
 
@@ -40,6 +38,7 @@ const AppNavigator = () => {
           <Stack.Screen name="User" component={UserScreen} />
           <Stack.Screen name="Settings" component={SettingsScreen} />
           <Stack.Screen name="Game" component={GameScreen} />
+          <Stack.Screen name="About" component={AboutScreen} />
         </>
       ) : (
         <>

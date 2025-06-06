@@ -1,16 +1,30 @@
-export default {
-    backgroundPrimary: '#FCE4EC',   // Rosa pastel suave
-    backgroundSecondary: '#F8BBD0', // Rosa más intenso
+const colors = {
+  // Azul pastel
+  primary: '#92C9DD',           // más oscuro que #A8D8EA
+  secondary: '#F5B38A',         // más oscuro que #FBC6A4
 
-    cloudLight: '#FFFFFF', // Blanco puro para detalles
-    cloudDark: '#D1C4E9',  // Lila claro, más elegante
+  // Tonos adicionales para UI
+  background: '#FFF7F1',
+  card: '#FFEEDB',
+  border: '#DDEAF0',
+  text: '#4A4A4A',
 
-    buttonPrimary: '#FF4081', // Fucsia vibrante
-    buttonSecondary: '#7E57C2', // Morado intenso para contraste
+  // Tonos acento
+  accentBlue: '#A6D2E2',        // más profundo que #B8E0F0
+  accentOrange: '#FFC085',      // más saturado que #FFD8A9
 
-    gradientLight: ['#FF80AB', '#FF4081', '#D500F9'], // Gradiente cálido (rosado-morado)
-    gradientDark: ['#7E57C2', '#651FFF', '#311B92'], // Gradiente profundo (morado oscuro)
+  // Estados
+  success: '#C3E6CB',
+  warning: '#FFE8A1',
+  danger: '#F3BDBD',
 
-    textPrimary: '#311B92', // Morado oscuro para buen contraste
-    textSecondary: '#FFFFFF', // Blanco para textos claros
+  // Para botones y elementos interactivos (⬇️ estos son los que más te interesan)
+  buttonPrimary: '#E98A4F',     // más oscuro y definido que #FFB070
+  buttonSecondary: '#7BBDB3',   // más fuerte que #A3D2CA
+
+  // Sombras o degradados
+  shadow: 'rgba(0, 0, 0, 0.1)',
+  gradientLight: ['#92C9DD', '#F5B38A'],
 };
+
+export default colors;

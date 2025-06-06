@@ -1,23 +1,32 @@
-import React, { useState } from "react";
+// src/screens/auth/RegisterScreen.js
+import React, { useState, useContext } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../services/firebaseConfig";
 import Colors from "../../constants/colors";
+import { showMessage } from "react-native-flash-message";
+import { UserContext } from "../../UserContext";
 
 const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { setUser } = useContext(UserContext); // ⬅️ usa el contexto
 
   const handleRegister = async () => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      console.log("Registro exitoso");
-      navigation.navigate("Login"); // Redirigir al login después del registro
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      setUser(userCredential.user); // ✅ guarda usuario en contexto
+
+      showMessage({
+        message: "🎉 Registro exitoso",
+        description: "Bienvenida a Jumping Cat!",
+        type: "success",
+      });
+
+      navigation.replace("Home"); // ⬅️ redirige directo a Home si quieres
     } catch (err) {
       console.error(err.message);
-  
-      // Muestra mensajes específicos según el error
       switch (err.code) {
         case "auth/email-already-in-use":
           setError("El correo ya está registrado.");
@@ -34,7 +43,6 @@ const RegisterScreen = ({ navigation }) => {
       }
     }
   };
-  
 
   return (
     <View style={styles.container}>
@@ -62,6 +70,8 @@ const RegisterScreen = ({ navigation }) => {
     </View>
   );
 };
+
+export default RegisterScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -102,5 +112,3 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
-
-export default RegisterScreen;

@@ -1,6 +1,6 @@
-// services/firestoreService.js
+// src/services/firestoreService.js
 import { collection, doc, setDoc, getDoc, getDocs, updateDoc } from "firebase/firestore";
-import { db } from "./firebaseConfig"; // Asegúrate que esté bien la ruta
+import { db } from "./firebaseConfig";
 
 // Crear o actualizar usuario
 export const saveUserData = async (userId, userData) => {
