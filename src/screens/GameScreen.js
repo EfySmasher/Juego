@@ -1,4 +1,3 @@
-// src/screens/GameScreen.js
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
   View,
@@ -32,11 +31,14 @@ const GameScreen = () => {
   const [catBottom, setCatBottom] = useState(GROUND_LEVEL);
   const catBottomRef = useRef(catBottom);
   const [obstacleX, setObstacleX] = useState(width);
+  const [mouseX, setMouseX] = useState(width + 400);
   const [score, setScore] = useState(0);
   const [isJumping, setIsJumping] = useState(false);
   const [isFalling, setIsFalling] = useState(false);
+  const [hasShield, setHasShield] = useState(false);
   const [paused, setPaused] = useState(false);
   const [gameOver, setGameOver] = useState(false);
+  const [obstaclePassed, setObstaclePassed] = useState(false);
 
   const jumpTimer = useRef(null);
   const fallTimer = useRef(null);
@@ -48,21 +50,13 @@ const GameScreen = () => {
 
   const getCatImage = () => {
     if (selectedCat === 'cat2') {
-      if (isJumping) {
-        return require('../../assets/jumpingCat2.png');
-      } else if (isFalling) {
-        return require('../../assets/fallingCat2.png');
-      } else {
-        return require('../../assets/cat2.png');
-      }
+      if (isJumping) return require('../../assets/jumpingCat2.png');
+      if (isFalling) return require('../../assets/fallingCat2.png');
+      return require('../../assets/cat2.png');
     } else {
-      if (isJumping) {
-        return require('../../assets/jumpingCat1.png');
-      } else if (isFalling) {
-        return require('../../assets/fallingCat1.png');
-      } else {
-        return require('../../assets/cat1.png');
-      }
+      if (isJumping) return require('../../assets/jumpingCat1.png');
+      if (isFalling) return require('../../assets/fallingCat1.png');
+      return require('../../assets/cat1.png');
     }
   };
 
@@ -71,7 +65,6 @@ const GameScreen = () => {
 
     setIsJumping(true);
     setIsFalling(false);
-
     let jumpHeight = 0;
 
     jumpTimer.current = setInterval(() => {
@@ -94,7 +87,6 @@ const GameScreen = () => {
         if (prev <= GROUND_LEVEL) {
           clearInterval(fallTimer.current);
           setIsFalling(false);
-          setCatBottom(GROUND_LEVEL);
           return GROUND_LEVEL;
         }
         return prev - GRAVITY;
@@ -109,30 +101,21 @@ const GameScreen = () => {
         jump();
       }
     };
-
-    if (Platform.OS === 'web') {
-      window.addEventListener('keydown', handleKeyDown);
-    }
-
+    if (Platform.OS === 'web') window.addEventListener('keydown', handleKeyDown);
     return () => {
-      if (Platform.OS === 'web') {
-        window.removeEventListener('keydown', handleKeyDown);
-      }
+      if (Platform.OS === 'web') window.removeEventListener('keydown', handleKeyDown);
     };
   }, [paused, gameOver, isJumping, isFalling]);
 
   useEffect(() => {
     if (!paused && !gameOver) {
       setObstacleX(width);
+      setMouseX(width + 400);
+      setObstaclePassed(false);
 
       moveObstacleTimer.current = setInterval(() => {
-        setObstacleX((prevX) => {
-          if (prevX <= -60) {
-            setScore((prev) => prev + 1);
-            return width;
-          }
-          return prevX - OBSTACLE_SPEED;
-        });
+        setObstacleX((prev) => (prev <= -60 ? width : prev - OBSTACLE_SPEED));
+        setMouseX((prev) => (prev <= -60 ? width + Math.random() * 300 + 200 : prev - OBSTACLE_SPEED));
       }, 30);
     }
     return () => clearInterval(moveObstacleTimer.current);
@@ -143,24 +126,60 @@ const GameScreen = () => {
 
     const CAT_WIDTH = 80;
     const OBSTACLE_WIDTH = 60;
-    const OBSTACLE_HEIGHT = 60;
+    const ITEM_WIDTH = 50;
 
-    const catRect = { x: CAT_LEFT, y: catBottomRef.current, width: CAT_WIDTH, height: 80 };
-    const obstacleRect = { x: obstacleX, y: GROUND_LEVEL, width: OBSTACLE_WIDTH, height: OBSTACLE_HEIGHT };
+    const catRect = {
+      x: CAT_LEFT,
+      y: catBottomRef.current,
+      width: CAT_WIDTH,
+      height: 80,
+    };
+    const obstacleRect = {
+      x: obstacleX,
+      y: GROUND_LEVEL,
+      width: OBSTACLE_WIDTH,
+      height: 60,
+    };
+    const mouseRect = {
+      x: mouseX,
+      y: GROUND_LEVEL,
+      width: ITEM_WIDTH,
+      height: 50,
+    };
 
-    const isColliding = !(
-      catRect.x + catRect.width < obstacleRect.x ||
-      catRect.x > obstacleRect.x + obstacleRect.width ||
-      catRect.y + catRect.height < obstacleRect.y ||
-      catRect.y > obstacleRect.y + obstacleRect.height
+    const isColliding = (r1, r2) => !(
+      r1.x + r1.width < r2.x ||
+      r1.x > r2.x + r2.width ||
+      r1.y + r1.height < r2.y ||
+      r1.y > r2.y + r2.height
     );
 
-    if (isColliding) {
-      setPaused(true);
-      setGameOver(true);
-      saveScore();
+    // Colisión con obstáculo
+    if (isColliding(catRect, obstacleRect)) {
+      if (hasShield) {
+        setHasShield(false);
+        setObstacleX(width);
+        setObstaclePassed(false);
+      } else {
+        setPaused(true);
+        setGameOver(true);
+        saveScore();
+      }
     }
-  }, [obstacleX, catBottom]);
+
+    // Colisión con ratón
+    if (isColliding(catRect, mouseRect)) {
+      setHasShield(true);
+      setMouseX(width + Math.random() * 500 + 300);
+    }
+
+    // Para detectar que el obstáculo fue esquivado
+    if (!obstaclePassed && obstacleX + OBSTACLE_WIDTH < CAT_LEFT) {
+      setScore((prev) => prev + 5);
+      setObstaclePassed(true);
+    }
+
+  }, [obstacleX, mouseX, catBottom]);
 
   const handleRestart = () => {
     setPaused(false);
@@ -168,13 +187,15 @@ const GameScreen = () => {
     setScore(0);
     setCatBottom(GROUND_LEVEL);
     setObstacleX(width);
+    setMouseX(width + 400);
     setIsJumping(false);
     setIsFalling(false);
+    setHasShield(false);
+    setObstaclePassed(false);
   };
 
   const saveScore = async () => {
     if (!user) return;
-
     const userRef = doc(db, 'users', user.uid);
     const docSnap = await getDoc(userRef);
 
@@ -196,9 +217,15 @@ const GameScreen = () => {
 
           <Text style={styles.score}>Puntos: {score}</Text>
 
+          {hasShield && (
+            <Image source={require('../../assets/shield.png')} style={styles.shieldIcon} />
+          )}
+
           <Image source={getCatImage()} style={[styles.cat, { bottom: catBottom }]} />
           <Image source={require('../../assets/perrito.png')} style={[styles.obstacle, { left: obstacleX, bottom: GROUND_LEVEL }]} />
+          <Image source={require('../../assets/raton.png')} style={[styles.obstacle, { left: mouseX, bottom: GROUND_LEVEL }]} />
 
+          {/* PAUSA */}
           <Modal transparent visible={paused} animationType="fade">
             <View style={styles.modalOverlay}>
               <View style={styles.modalMenu}>
@@ -209,19 +236,14 @@ const GameScreen = () => {
                 <TouchableOpacity onPress={handleRestart} style={styles.menuButton}>
                   <Text style={styles.menuButtonText}>Reiniciar</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    setPaused(false);
-                    navigation.navigate('Home');
-                  }}
-                  style={styles.menuButton}
-                >
+                <TouchableOpacity onPress={() => { setPaused(false); navigation.navigate('Home'); }} style={styles.menuButton}>
                   <Text style={styles.menuButtonText}>Volver al inicio</Text>
                 </TouchableOpacity>
               </View>
             </View>
           </Modal>
 
+          {/* GAME OVER */}
           <Modal transparent visible={gameOver} animationType="fade">
             <View style={styles.modalOverlay}>
               <View style={styles.modalMenu}>
@@ -230,13 +252,7 @@ const GameScreen = () => {
                 <TouchableOpacity onPress={handleRestart} style={styles.menuButton}>
                   <Text style={styles.menuButtonText}>Volver a Intentarlo</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    setGameOver(false);
-                    navigation.navigate('Home');
-                  }}
-                  style={styles.menuButton}
-                >
+                <TouchableOpacity onPress={() => { setGameOver(false); navigation.navigate('Home'); }} style={styles.menuButton}>
                   <Text style={styles.menuButtonText}>Volver al inicio</Text>
                 </TouchableOpacity>
               </View>
@@ -264,6 +280,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: 60,
     height: 60,
+    resizeMode: 'contain',
+  },
+  shieldIcon: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+    width: 40,
+    height: 40,
     resizeMode: 'contain',
   },
   score: {
@@ -325,8 +349,7 @@ const styles = StyleSheet.create({
   },
   menuButtonText: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#ff8c42',
+    color: '#333',
     textAlign: 'center',
   },
 });

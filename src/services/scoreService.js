@@ -1,4 +1,3 @@
-//src/services/scoreService.js
 import { db } from "./firebaseConfig";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
 

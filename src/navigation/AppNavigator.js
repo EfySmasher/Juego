@@ -1,9 +1,8 @@
-// src/navigation/AppNavigator.js
 import React, { useContext, useEffect, useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { UserContext } from "../UserContext";
 
-// Screens
+//Screens
 import LoginScreen from "../screens/auth/LoginScreen";
 import RegisterScreen from "../screens/auth/RegisterScreen";
 import HomeScreen from "../screens/HomeScreen";
@@ -22,7 +21,7 @@ const AppNavigator = () => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setIsLoading(false);
-    }, 2000); // 2 segundos para el splash
+    }, 2000);
     return () => clearTimeout(timeout);
   }, []);
 
@@ -45,6 +44,7 @@ const AppNavigator = () => {
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
         </>
+        
       )}
     </Stack.Navigator>
   );

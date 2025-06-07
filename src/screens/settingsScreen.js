@@ -12,10 +12,7 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import defaultAvatar from "../../assets/avatar.png";
 import { UserContext } from "../UserContext";
-import { signOut } from "firebase/auth";
-import { auth } from "../services/firebaseConfig";
 
-// AGREGAR navigation aquí
 const SettingsScreen = ({ navigation }) => {
   const { user, setUser } = useContext(UserContext);
   const [image, setImage] = useState(user?.photo || null);
@@ -73,25 +70,6 @@ const SettingsScreen = ({ navigation }) => {
     }
   };
 
-  const handleLogout = () => {
-    Alert.alert("Cerrar sesión", "¿Estás segura de que quieres cerrar sesión?", [
-      { text: "Cancelar", style: "cancel" },
-      {
-        text: "Sí",
-        style: "destructive",
-        onPress: async () => {
-          try {
-            await signOut(auth);
-            setUser(null); // Esto ya redirige gracias a AppNavigator
-          } catch (error) {
-            console.log("Error cerrando sesión:", error);
-            Alert.alert("Error", "No se pudo cerrar sesión.");
-          }
-        },
-      },
-    ]);
-  };
-
   return (
     <ImageBackground
       source={require("../../assets/fondo.png")}
@@ -100,27 +78,22 @@ const SettingsScreen = ({ navigation }) => {
       <View style={styles.container}>
         <Text style={styles.title}>Configuración</Text>
 
-        <Image
-          source={image ? { uri: image } : defaultAvatar}
-          style={styles.avatar}
-        />
+        <View style={styles.avatarContainer}>
+          <Image
+            source={image ? { uri: image } : defaultAvatar}
+            style={styles.avatar}
+          />
+        </View>
 
         <Pressable style={styles.button} onPress={pickImage}>
           <Text style={styles.buttonText}>Cambiar foto de perfil</Text>
         </Pressable>
 
         <Pressable
-          style={[styles.button, { backgroundColor: "#4aa3df" }]}
+          style={[styles.button, { backgroundColor: "#4aa3df", marginTop: 25 }]}
           onPress={() => navigation.navigate("Home")}
         >
           <Text style={styles.buttonText}>Volver al Home</Text>
-        </Pressable>
-
-        <Pressable
-          style={[styles.button, { backgroundColor: "#ff4d4d", marginTop: 40 }]}
-          onPress={handleLogout}
-        >
-          <Text style={styles.buttonText}>Cerrar sesión</Text>
         </Pressable>
       </View>
     </ImageBackground>
@@ -138,24 +111,29 @@ const styles = StyleSheet.create({
   },
   container: {
     alignItems: "center",
-    padding: 30,
+    paddingVertical: 40,
+    paddingHorizontal: 30,
     borderRadius: 20,
     width: "90%",
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: "rgba(0,0,0,0.6)",
   },
   title: {
     fontSize: 28,
     fontWeight: "bold",
     color: "#fff",
-    marginBottom: 20,
+    marginBottom: 30,
+  },
+  avatarContainer: {
+    marginBottom: 25,
+    borderRadius: 100,
+    padding: 5,
+    borderWidth: 3,
+    borderColor: "#fff",
   },
   avatar: {
     width: 130,
     height: 130,
     borderRadius: 65,
-    marginBottom: 25,
-    borderWidth: 3,
-    borderColor: "#fff",
   },
   button: {
     backgroundColor: "#f78c6b",
@@ -165,6 +143,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
     minWidth: 200,
     alignItems: "center",
+    elevation: 3,
   },
   buttonText: {
     color: "#fff",

@@ -10,7 +10,6 @@ const SplashScreen = () => {
     const scaleAnim = useRef(new Animated.Value(0.8)).current;
 
     useEffect(() => {
-        // Animación combinada: opacidad + escala
         Animated.parallel([
             Animated.timing(fadeAnim, {
                 toValue: 1,
@@ -24,9 +23,9 @@ const SplashScreen = () => {
             }),
         ]).start();
 
-        // Cambiar de pantalla después de 3 segundos
+        
         const timer = setTimeout(() => {
-            navigation.replace(user ? 'Home' : 'Login'); // Cambia según la lógica de autenticación
+            navigation.replace(user ? 'Home' : 'Login'); 
         }, 3000);
 
         return () => clearTimeout(timer);

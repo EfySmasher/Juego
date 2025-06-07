@@ -9,18 +9,19 @@
     "newArchEnabled": true,
     "jsEngine": "jsc",
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ff0000"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.sofiacano.jumpingcat"
+      "bundleIdentifier": "com.sofiacano.jumpingcat",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "package": "com.sofiacano.jumpingcat",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/splash.png",
         "backgroundColor": "#ffffff"
       }
     },

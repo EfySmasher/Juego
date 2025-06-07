@@ -16,14 +16,14 @@ const LoginScreen = () => {
   const handleLogin = async () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      setUser(userCredential.user); // ✅ Guarda en contexto
+      setUser(userCredential.user);
 
       showMessage({
         message: "🥳 Bienvenido de nuevo!",
         type: "success",
       });
 
-      navigation.replace("Home"); // Opcional: evitar volver a Login
+      navigation.replace("Home"); 
     } catch (error) {
       showMessage({
         message: "😥 Error al iniciar sesión",

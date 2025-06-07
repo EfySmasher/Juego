@@ -6,11 +6,8 @@ import { UserContext } from "../UserContext";
 import defaultAvatar from "../../assets/avatar.png";
 import { db } from '../services/firebaseConfig';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { updateProfile } from "firebase/auth";  // para actualizar displayName en Auth
-import ModalEditProfile from "../components/ModalEditProfile"; // Ajusta la ruta si es necesario
-
-
-
+import { updateProfile } from "firebase/auth"; 
+import ModalEditProfile from "../components/ModalEditProfile"; 
 
 const UserScreen = () => {
   const { user } = useContext(UserContext);
@@ -51,23 +48,15 @@ const UserScreen = () => {
     );
   }
 
-  // Función para guardar el nuevo nombre
   const saveName = async () => {
     try {
-      // Actualizar en Firestore
       const userRef = doc(db, 'users', user.uid);
       await updateDoc(userRef, { displayName: newName });
-
-      // Actualizar en Firebase Auth (para que user.displayName cambie)
       await updateProfile(user, { displayName: newName });
 
       setModalVisible(false);
-      // Aquí podrías forzar un refresh o usar un método para actualizar el contexto UserContext si lo tienes
-      // Por ejemplo, si tienes una función refreshUser() en tu contexto, la llamas aquí.
-
     } catch (error) {
       console.log("Error actualizando nombre:", error);
-      // Puedes agregar un alert o mensaje de error
     }
   };
 
@@ -129,7 +118,7 @@ const UserScreen = () => {
 
 export default UserScreen;
 
-// styles queda igual
+
 
 
 const styles = StyleSheet.create({
@@ -144,7 +133,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     marginBottom: 20,
-    color: "#ff8c42", // corregido
+    color: "#ff8c42",
   },
   avatar: {
     width: 120,
@@ -152,8 +141,8 @@ const styles = StyleSheet.create({
     borderRadius: 60,
     marginBottom: 20,
     borderWidth: 3,
-    borderColor: "#ff8c42", // corregido
-    shadowColor: "#ff8c42", // corregido
+    borderColor: "#ff8c42", 
+    shadowColor: "#ff8c42", 
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -171,7 +160,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 30,
     borderRadius: 25,
-    shadowColor: "#ff8c42", // corregido
+    shadowColor: "#ff8c42", 
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.4,
     shadowRadius: 10,

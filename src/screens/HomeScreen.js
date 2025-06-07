@@ -1,4 +1,3 @@
-// src/screens/HomeScreen.js
 import React, { useState, useContext } from "react";
 import {
   View,
@@ -31,6 +30,15 @@ const HomeScreen = ({ navigation }) => {
       source={require("../../assets/fondo.png")}
       style={styles.background}
     >
+      {/* Logo en esquina superior izquierda */}
+      <View style={styles.logoContainer}>
+        <Image
+          source={require("../../assets/LOGO.png")}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+      </View>
+
       <View style={styles.container}>
         <Text style={styles.title}>Elige tu Gatito</Text>
 
@@ -58,7 +66,7 @@ const HomeScreen = ({ navigation }) => {
         {catSelected && (
           <Pressable
             onPress={handlePlay}
-            style={[styles.iconButton, { backgroundColor: "#F3BDBD" }]}
+            style={[styles.iconButton, { backgroundColor: "#F3BDBD", marginTop: 10 }]}
           >
             <Ionicons name="play" size={30} color="#fff" />
           </Pressable>
@@ -112,10 +120,24 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  logoContainer: {
+    position: "absolute",
+    top: 40,
+    left: 20,
+    width: 80,
+    height: 80,
+    zIndex: 10,
+  },
+  logo: {
+    width: "100%",
+    height: "100%",
+  },
   container: {
     alignItems: "center",
     padding: 30,
     borderRadius: 20,
+    width: "90%",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
   },
   title: {
     fontSize: 28,
@@ -126,7 +148,7 @@ const styles = StyleSheet.create({
   catContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
-    width: "80%",
+    width: "100%",
     marginBottom: 20,
   },
   catImage: {

@@ -16,7 +16,7 @@ const AboutScreen = ({ navigation }) => {
 
       <Text style={styles.sectionTitle}>🐱 Jumping Cat</Text>
       <Text style={styles.text}>
-        Jumping Cat es un juego divertido y ligero donde un gatito salta sin parar para llegar lo más alto posible.{"\n\n"}
+        Jumping Cat es un juego divertido y ligero donde un gatito salta evitando obstáculos para obtener el puntaje más alto posible.{"\n\n"}
         Fue diseñado para ser simple, accesible y entretenido para todo tipo de jugadores.{"\n\n"}
         Nuestro objetivo es ofrecer una experiencia relajante, ideal para pasar el rato y desconectarse un momento del estrés diario.
       </Text>

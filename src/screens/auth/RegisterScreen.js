@@ -1,4 +1,3 @@
-// src/screens/auth/RegisterScreen.js
 import React, { useState, useContext } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -11,20 +10,20 @@ const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { setUser } = useContext(UserContext); // ⬅️ usa el contexto
+  const { setUser } = useContext(UserContext);
 
   const handleRegister = async () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      setUser(userCredential.user); // ✅ guarda usuario en contexto
+      setUser(userCredential.user);
 
       showMessage({
         message: "🎉 Registro exitoso",
-        description: "Bienvenida a Jumping Cat!",
+        description: "Bienvenido a Jumping Cat!",
         type: "success",
       });
 
-      navigation.replace("Home"); // ⬅️ redirige directo a Home si quieres
+      navigation.replace("Home");
     } catch (err) {
       console.error(err.message);
       switch (err.code) {

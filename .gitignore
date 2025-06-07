@@ -37,3 +37,4 @@ yarn-error.*
 
 # Firebase config
 firebase-credentials/
+GoogleService-Info.plist
